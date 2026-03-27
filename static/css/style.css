@@ -478,6 +478,59 @@ a { color: inherit; text-decoration: none; }
 .auth-switch a:hover { text-decoration: underline; }
 
 /* ------------------------------------------------------------------ */
+/* Static pages (Terms, Privacy, etc.)                                */
+/* ------------------------------------------------------------------ */
+
+.static-page {
+    padding: 4rem 2rem 6rem;
+}
+
+.static-page-inner {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.static-page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+}
+
+.static-page-meta {
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.static-page-inner h2 {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    color: var(--ink);
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.static-page-inner p {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+.static-page-inner ul {
+    margin: 0.5rem 0 1rem 1.5rem;
+}
+
+.static-page-inner li {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    line-height: 1.8;
+}
+
+/* ------------------------------------------------------------------ */
 /* Footer                                                              */
 /* ------------------------------------------------------------------ */
 
@@ -506,6 +559,14 @@ a { color: inherit; text-decoration: none; }
     font-size: 0.8rem;
     color: var(--ink-faint);
 }
+
+.footer a {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    transition: color 0.2s;
+}
+
+.footer a:hover { color: var(--paper); }
 
 /* ------------------------------------------------------------------ */
 /* Responsive                                                          */
