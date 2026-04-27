@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.db import get_db, init_db, seed_db
+from datetime import datetime
 import sqlite3
 
 app = Flask(__name__)
@@ -95,7 +96,53 @@ def logout():
 
 @app.route("/profile")
 def profile():
-    return "Profile page — coming in Step 4"
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    db = get_db()
+    user = db.execute(
+        "SELECT name, email, created_at FROM users WHERE id = ?",
+        (session["user_id"],)
+    ).fetchone()
+
+    if user is None:
+        session.clear()
+        return redirect(url_for("login"))
+
+    member_since = datetime.strptime(user["created_at"][:10], "%Y-%m-%d").strftime("%B %Y")
+
+    total_spent = db.execute(
+        "SELECT COALESCE(SUM(amount), 0) FROM expenses WHERE user_id = ?",
+        (session["user_id"],)
+    ).fetchone()[0]
+
+    cat_rows = db.execute(
+        "SELECT category, SUM(amount) as total FROM expenses WHERE user_id = ?"
+        " GROUP BY category ORDER BY total DESC",
+        (session["user_id"],)
+    ).fetchall()
+    categories = [
+        {
+            "name": r["category"],
+            "total": r["total"],
+            "pct": round(r["total"] / total_spent * 100) if total_spent else 0,
+        }
+        for r in cat_rows
+    ]
+
+    recent = db.execute(
+        "SELECT amount, category, date, description FROM expenses"
+        " WHERE user_id = ? ORDER BY date DESC LIMIT 5",
+        (session["user_id"],)
+    ).fetchall()
+
+    return render_template("profile.html",
+        user=user,
+        member_since=member_since,
+        total_spent=total_spent,
+        categories=categories,
+        recent=recent,
+    )
 
 
 @app.route("/expenses/add")
