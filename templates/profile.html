@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Profile — Spendly{% endblock %}
+
+{% block content %}
+<section class="profile-page">
+    <div class="profile-wrap">
+
+        <div class="profile-head">
+            <div class="profile-avatar">{{ user.name[0].upper() }}</div>
+            <h1 class="profile-name">{{ user.name }}</h1>
+            <p class="profile-since">Member since {{ member_since }}</p>
+        </div>
+
+        <div class="auth-card">
+            <div class="profile-field">
+                <span class="profile-label">Email</span>
+                <span class="profile-value">{{ user.email }}</span>
+            </div>
+            <div class="profile-field profile-field--last">
+                <span class="profile-label">Member since</span>
+                <span class="profile-value">{{ member_since }}</span>
+            </div>
+        </div>
+
+        {% if categories %}
+        <div class="auth-card">
+            <div class="profile-spend-header">
+                <span class="profile-label">Total spending</span>
+                <span class="profile-spend-total">&#8377;{{ "%.2f"|format(total_spent) }}</span>
+            </div>
+            {% set bar_mods = ['', ' mock-bar-2', ' mock-bar-3', ' mock-bar-4'] %}
+            <div class="mock-bars">
+                {% for cat in categories %}
+                <div class="mock-bar-row">
+                    <span class="mock-cat">{{ cat.name }}</span>
+                    <div class="mock-bar-track">
+                        <div class="mock-bar{{ bar_mods[loop.index0 % 4] }}" style="width: {{ cat.pct }}%"></div>
+                    </div>
+                    <span class="mock-amt">&#8377;{{ "%.0f"|format(cat.total) }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if recent %}
+        <div class="auth-card">
+            <p class="profile-section-label">Recent transactions</p>
+            <div class="txn-list">
+                {% for txn in recent %}
+                <div class="txn-row{% if loop.last %} txn-row--last{% endif %}">
+                    <div class="txn-left">
+                        <span class="txn-cat">{{ txn.category }}</span>
+                        <span class="txn-desc">{{ txn.description or '—' }}</span>
+                    </div>
+                    <div class="txn-right">
+                        <span class="txn-amt">&#8377;{{ "%.2f"|format(txn.amount) }}</span>
+                        <span class="txn-date">{{ txn.date }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if not categories %}
+        <div class="auth-card" style="text-align: center; color: var(--ink-muted);">
+            No expenses recorded yet.
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}
