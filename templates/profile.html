@@ -23,6 +23,28 @@
             </div>
         </div>
 
+        <div class="filter-bar auth-card">
+            <div class="filter-presets">
+                <a href="{{ url_for('profile') }}"
+                   class="filter-preset-btn{% if not from_date %} active{% endif %}">All time</a>
+                <a href="{{ url_for('profile', **{'from': presets.this_month.from, 'to': presets.this_month.to}) }}"
+                   class="filter-preset-btn{% if from_date and from_date.isoformat() == presets.this_month.from %} active{% endif %}">This Month</a>
+                <a href="{{ url_for('profile', **{'from': presets.last_3_months.from, 'to': presets.last_3_months.to}) }}"
+                   class="filter-preset-btn{% if from_date and from_date.isoformat() == presets.last_3_months.from %} active{% endif %}">Last 3 Months</a>
+                <a href="{{ url_for('profile', **{'from': presets.this_year.from, 'to': presets.this_year.to}) }}"
+                   class="filter-preset-btn{% if from_date and from_date.isoformat() == presets.this_year.from %} active{% endif %}">This Year</a>
+            </div>
+            <form class="filter-custom" method="get" action="{{ url_for('profile') }}">
+                <input type="date" name="from" class="form-input" value="{{ from_date or '' }}">
+                <span>–</span>
+                <input type="date" name="to" class="form-input" value="{{ to_date or '' }}">
+                <button type="submit" class="btn--sm">Apply</button>
+            </form>
+            {% if from_date and to_date %}
+            <p class="filter-label">Showing: {{ from_date.strftime("%b") }} {{ from_date.day }} – {{ to_date.strftime("%b") }} {{ to_date.day }}, {{ to_date.year }}</p>
+            {% endif %}
+        </div>
+
         {% if categories %}
         <div class="auth-card">
             <div class="profile-spend-header">
@@ -46,7 +68,7 @@
 
         {% if recent %}
         <div class="auth-card">
-            <p class="profile-section-label">Recent transactions</p>
+            <p class="profile-section-label">{% if from_date %}Transactions{% else %}Recent transactions{% endif %}</p>
             <div class="txn-list">
                 {% for txn in recent %}
                 <div class="txn-row{% if loop.last %} txn-row--last{% endif %}">
@@ -66,7 +88,7 @@
 
         {% if not categories %}
         <div class="auth-card" style="text-align: center; color: var(--ink-muted);">
-            No expenses recorded yet.
+            {% if from_date %}No expenses in this date range.{% else %}No expenses recorded yet.{% endif %}
         </div>
         {% endif %}
 
