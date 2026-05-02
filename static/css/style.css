@@ -454,6 +454,74 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ------------------------------------------------------------------ */
+/* Date filter bar                                                     */
+/* ------------------------------------------------------------------ */
+
+.filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.filter-presets {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-preset-btn {
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--ink-muted);
+    color: var(--ink);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.filter-preset-btn:hover,
+.filter-preset-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--paper);
+}
+
+.filter-custom {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-custom .form-input {
+    width: auto;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.85rem;
+}
+
+.filter-label {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    margin: 0;
+}
+
+.btn--sm {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.35rem 0.9rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn--sm:hover { background: var(--accent); }
+
+/* ------------------------------------------------------------------ */
 /* Buttons                                                             */
 /* ------------------------------------------------------------------ */
 
