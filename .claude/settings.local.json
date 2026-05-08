@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__sqlite__list_tables",
+      "mcp__sqlite__read_query",
+      "Bash(sqlite3 *)",
+      "mcp__sqlite__describe_table",
+      "Bash(python -c ' *)",
+      "mcp__github__search_issues"
+    ]
+  }
+}

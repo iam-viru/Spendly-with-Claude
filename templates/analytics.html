@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics — Spendly{% endblock %}
+
+{% block head %}
+<style>
+    .analytics-page {
+        min-height: calc(100vh - 60px - 100px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 1.5rem;
+        background: linear-gradient(135deg, var(--paper) 0%, var(--paper-warm) 50%, var(--paper) 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .analytics-bg-blob {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: var(--accent);
+        opacity: 0.04;
+        border-radius: 50%;
+        filter: blur(60px);
+        pointer-events: none;
+    }
+
+    .analytics-bg-blob--tl { top: -160px; left: -160px; }
+    .analytics-bg-blob--br { bottom: -160px; right: -160px; }
+
+    .analytics-card {
+        position: relative;
+        background: var(--paper-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.08);
+        padding: 3rem 2.5rem;
+        width: 100%;
+        max-width: 480px;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .analytics-card-accent-tr {
+        position: absolute;
+        top: 0; right: 0;
+        width: 80px; height: 80px;
+        background: linear-gradient(135deg, var(--accent), transparent);
+        opacity: 0.08;
+        border-bottom-left-radius: 100%;
+    }
+
+    .analytics-card-accent-bl {
+        position: absolute;
+        bottom: 0; left: 0;
+        width: 80px; height: 80px;
+        background: linear-gradient(315deg, var(--accent), transparent);
+        opacity: 0.08;
+        border-top-right-radius: 100%;
+    }
+
+    .analytics-card-bottom-line {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        opacity: 0.3;
+        border-radius: 999px;
+    }
+
+    .analytics-icon-wrap {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
+
+    .analytics-icon-glow {
+        position: absolute;
+        width: 88px;
+        height: 88px;
+        background: var(--accent);
+        opacity: 0.15;
+        border-radius: 50%;
+        filter: blur(20px);
+    }
+
+    .analytics-icon-box {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--accent), #1a2d25);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 24px rgba(26, 71, 42, 0.3);
+        transition: transform 0.3s ease;
+    }
+
+    .analytics-icon-box:hover { transform: scale(1.05); }
+
+    .analytics-icon-box svg {
+        width: 40px;
+        height: 40px;
+        color: #ffffff;
+        stroke: #ffffff;
+    }
+
+    .analytics-badge {
+        display: inline-block;
+        background: linear-gradient(90deg, var(--accent), #2d5a3e);
+        color: var(--paper);
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        padding: 0.4rem 1.1rem;
+        border-radius: 999px;
+        margin-bottom: 1.25rem;
+        box-shadow: 0 4px 12px rgba(26, 71, 42, 0.2);
+    }
+
+    .analytics-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.6rem, 4vw, 2.2rem);
+        color: var(--accent);
+        margin-bottom: 1rem;
+        line-height: 1.2;
+    }
+
+    .analytics-desc {
+        font-size: 0.95rem;
+        color: var(--ink-muted);
+        line-height: 1.75;
+        max-width: 340px;
+        margin: 0 auto 2rem;
+    }
+
+    .analytics-dots {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .analytics-dot {
+        width: 10px;
+        height: 10px;
+        background: var(--accent);
+        border-radius: 50%;
+        animation: analytics-pulse 1.4s ease-in-out infinite;
+    }
+
+    .analytics-dot:nth-child(2) { animation-delay: 0.2s; }
+    .analytics-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes analytics-pulse {
+        0%, 100% { opacity: 0.3; transform: scale(0.85); }
+        50% { opacity: 1; transform: scale(1); }
+    }
+
+    .analytics-crafting {
+        font-size: 0.78rem;
+        color: var(--ink-faint);
+        letter-spacing: 0.05em;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="analytics-page">
+    <div class="analytics-bg-blob analytics-bg-blob--tl"></div>
+    <div class="analytics-bg-blob analytics-bg-blob--br"></div>
+
+    <div class="analytics-card">
+        <div class="analytics-card-accent-tr"></div>
+        <div class="analytics-card-accent-bl"></div>
+
+        <div class="analytics-icon-wrap">
+            <div class="analytics-icon-glow"></div>
+            <div class="analytics-icon-box">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="analytics-badge">Coming Soon</div>
+
+        <h1 class="analytics-title">Analytics</h1>
+
+        <p class="analytics-desc">
+            Powerful spending insights and trends are on their way.
+            We're building something great for you.
+        </p>
+
+        <div class="analytics-dots">
+            <div class="analytics-dot"></div>
+            <div class="analytics-dot"></div>
+            <div class="analytics-dot"></div>
+        </div>
+        <p class="analytics-crafting">We're crafting something special</p>
+
+        <div class="analytics-card-bottom-line"></div>
+    </div>
+</div>
+{% endblock %}

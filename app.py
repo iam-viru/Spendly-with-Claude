@@ -1,11 +1,15 @@
+import os
+from decimal import Decimal, InvalidOperation
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.db import get_db, init_db, seed_db
 from datetime import datetime, date
 import sqlite3
 
+EXPENSE_CATEGORIES = ["Food", "Transport", "Bills", "Health", "Entertainment", "Shopping", "Other"]
+
 app = Flask(__name__)
-app.secret_key = "spendly-dev-secret"  # TODO: replace with env var in production
+app.secret_key = os.environ.get("SECRET_KEY", "spendly-dev-secret")
 
 with app.app_context():
     init_db()
@@ -200,9 +204,65 @@ def profile():
     )
 
 
-@app.route("/expenses/add")
+@app.route("/analytics")
+def analytics():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    return render_template("analytics.html")
+
+
+@app.route("/expenses/add", methods=["GET", "POST"])
 def add_expense():
-    return "Add expense — coming in Step 7"
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    form = {}
+    error = None
+
+    if request.method == "POST":
+        form = {
+            "amount":      request.form.get("amount", "").strip(),
+            "category":    request.form.get("category", "").strip(),
+            "date":        request.form.get("date", "").strip(),
+            "description": request.form.get("description", "").strip(),
+        }
+
+        try:
+            amount = Decimal(form["amount"])
+            if amount <= 0:
+                raise InvalidOperation
+        except InvalidOperation:
+            error = "Amount must be a positive number."
+
+        if not error and form["category"] not in EXPENSE_CATEGORIES:
+            error = "Please select a valid category."
+
+        if not error:
+            try:
+                datetime.strptime(form["date"], "%Y-%m-%d")
+            except ValueError:
+                error = "Please enter a valid date."
+
+        if not error and len(form["description"]) > 200:
+            error = "Description must be 200 characters or fewer."
+
+        if not error:
+            db = get_db()
+            db.execute(
+                "INSERT INTO expenses (user_id, amount, category, date, description) VALUES (?, ?, ?, ?, ?)",
+                (session["user_id"], str(amount), form["category"], form["date"], form["description"] or None),
+            )
+            db.commit()
+            return redirect(url_for("profile"))
+
+    return render_template("add_expense.html",
+        categories=EXPENSE_CATEGORIES,
+        error=error,
+        date=form.get("date") or date.today().isoformat(),
+        amount=form.get("amount", ""),
+        category=form.get("category", ""),
+        description=form.get("description", ""),
+    )
 
 
 @app.route("/expenses/<int:id>/edit")
