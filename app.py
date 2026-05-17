@@ -1,6 +1,6 @@
 import os
 from decimal import Decimal, InvalidOperation
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.db import get_db, init_db, seed_db
 from datetime import datetime, date
@@ -160,7 +160,7 @@ def profile():
         ).fetchall()
 
         recent = db.execute(
-            "SELECT amount, category, date, description FROM expenses"
+            "SELECT id, amount, category, date, description FROM expenses"
             " WHERE user_id = ? AND date BETWEEN ? AND ?"
             " ORDER BY date DESC",
             (uid, fd, td),
@@ -178,7 +178,7 @@ def profile():
         ).fetchall()
 
         recent = db.execute(
-            "SELECT amount, category, date, description FROM expenses"
+            "SELECT id, amount, category, date, description FROM expenses"
             " WHERE user_id = ? ORDER BY date DESC LIMIT 5",
             (uid,),
         ).fetchall()
@@ -265,9 +265,68 @@ def add_expense():
     )
 
 
-@app.route("/expenses/<int:id>/edit")
+@app.route("/expenses/<int:id>/edit", methods=["GET", "POST"])
 def edit_expense(id):
-    return "Edit expense — coming in Step 8"
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    db = get_db()
+    expense = db.execute(
+        "SELECT * FROM expenses WHERE id = ?", (id,)
+    ).fetchone()
+
+    if expense is None or expense["user_id"] != session["user_id"]:
+        abort(404)
+
+    form = {}
+    error = None
+
+    if request.method == "POST":
+        form = {
+            "amount":      request.form.get("amount", "").strip(),
+            "category":    request.form.get("category", "").strip(),
+            "date":        request.form.get("date", "").strip(),
+            "description": request.form.get("description", "").strip(),
+        }
+
+        try:
+            amount = Decimal(form["amount"])
+            if amount <= 0:
+                raise InvalidOperation
+        except InvalidOperation:
+            error = "Amount must be a positive number."
+
+        if not error and form["category"] not in EXPENSE_CATEGORIES:
+            error = "Please select a valid category."
+
+        if not error:
+            try:
+                datetime.strptime(form["date"], "%Y-%m-%d")
+            except ValueError:
+                error = "Please enter a valid date."
+
+        if not error and len(form["description"]) > 200:
+            error = "Description must be 200 characters or fewer."
+
+        if not error:
+            db.execute(
+                "UPDATE expenses SET amount=?, category=?, date=?, description=?"
+                " WHERE id=? AND user_id=?",
+                (str(amount), form["category"], form["date"],
+                 form["description"] or None, id, session["user_id"]),
+            )
+            db.commit()
+            return redirect(url_for("profile"))
+
+    return render_template("edit_expense.html",
+        categories=EXPENSE_CATEGORIES,
+        error=error,
+        expense_id=id,
+        amount=form.get("amount") if form else expense["amount"],
+        category=form.get("category") if form else expense["category"],
+        date=form.get("date") if form else expense["date"],
+        description=form.get("description") if form else (expense["description"] or ""),
+    )
 
 
 @app.route("/expenses/<int:id>/delete")

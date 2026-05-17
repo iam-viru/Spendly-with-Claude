@@ -79,6 +79,7 @@
                     <div class="txn-right">
                         <span class="txn-amt">&#8377;{{ "%.2f"|format(txn.amount) }}</span>
                         <span class="txn-date">{{ txn.date }}</span>
+                        <a href="{{ url_for('edit_expense', id=txn.id) }}" style="font-size:0.8rem; color:var(--accent); margin-left:0.5rem;">Edit</a>
                     </div>
                 </div>
                 {% endfor %}
