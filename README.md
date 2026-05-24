@@ -136,4 +136,4 @@ Set it on Railway under **Variables** in your service settings.
 
 ## License
 
-MIT — free to use, modify, and distribute.
+MIT — free to use, modify, and distribute and do not forget to give credit.
