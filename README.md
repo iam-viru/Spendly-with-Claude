@@ -2,7 +2,7 @@
 
 **Spendly** is a clean, no-fuss personal expense tracker built with Flask. Log your expenses, understand your spending patterns, and stay on top of your budget — without the spreadsheet headache.
 
-> Live demo → [spendly on Railway](https://your-railway-url.railway.app) *(update this link)*
+> Live demo → [spendly Live URL](https://spendly-production-b32a.up.railway.app/) 
 
 ---
 
