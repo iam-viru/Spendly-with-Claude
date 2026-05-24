@@ -80,6 +80,9 @@
                         <span class="txn-amt">&#8377;{{ "%.2f"|format(txn.amount) }}</span>
                         <span class="txn-date">{{ txn.date }}</span>
                         <a href="{{ url_for('edit_expense', id=txn.id) }}" style="font-size:0.8rem; color:var(--accent); margin-left:0.5rem;">Edit</a>
+                        <form method="post" action="{{ url_for('delete_expense', id=txn.id) }}" style="display:inline; margin-left:0.5rem;">
+                            <button type="submit" onclick="return confirm('Delete this expense? This cannot be undone.')" style="background:none; border:none; padding:0; font-size:0.8rem; color:var(--danger); cursor:pointer; font-family:var(--font-body);">Delete</button>
+                        </form>
                     </div>
                 </div>
                 {% endfor %}

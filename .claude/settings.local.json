@@ -6,7 +6,8 @@
       "Bash(sqlite3 *)",
       "mcp__sqlite__describe_table",
       "Bash(python -c ' *)",
-      "mcp__github__search_issues"
+      "mcp__github__search_issues",
+      "Bash(git checkout *)"
     ]
   }
 }
